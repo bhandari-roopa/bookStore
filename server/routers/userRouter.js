@@ -57,7 +57,7 @@ router.post("/login",async(req,res)=>{
     });
    
     const token = jwt.sign({
-        id:savedUser._id
+        id:existingUser._id
     },process.env.JWT_SECRET)
 
 res.cookie("token",token
@@ -71,17 +71,18 @@ res.cookie("token",token
 })
 
 router.get("/loggedIn",(req,res)=>{
+    
     try {
         const token = req.cookies.token;
-        if(!token){
-            return res.json(null);
-        }
-        const validateUser = jwt.verify(token, process.env.JWT_SECRET)
-        res.json(validateUser.id)
-        
-    } catch (error) {
-        res.json(null);
-    }
+    
+        if (!token) return res.json(null);
+    
+        const validatedUser = jwt.verify(token, process.env.JWT_SECRET);
+    
+        res.json(validatedUser.id);
+      } catch (err) {
+        return res.json(null);
+      }
 })
 
 router.get("/logout",(req,res)=>{

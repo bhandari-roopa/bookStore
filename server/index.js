@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors =require('cors');
+const cookieParser = require("cookie-parser");
 
 const app = express();
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(cors({
   credentials:true
 }));
 
+app.use(cookieParser());
 // app.use(function (req, res, next) {
 
 // res.header('Access-Control-Allow-Origin', "http://localhost:3000/");
