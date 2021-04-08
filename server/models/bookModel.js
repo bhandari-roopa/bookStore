@@ -3,6 +3,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const bookSchema = new mongoose.Schema({
     title:{type : String , required: true},
+    author:{type : String , required: true},
     description :{ type : String , required: true},
     user: { type: ObjectId, required: true },
 },{
