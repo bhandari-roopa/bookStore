@@ -8,16 +8,16 @@ router.post("/",async(req,res)=>{
        const {userName, password, confirmPassword} =req.body;
        if(!userName || !password || !confirmPassword)
        {
-           return res.status(500).json({ error : 'all fields are required'})
+           return res.status(500).json({ errorMessage : 'all fields are required'})
        } 
        if(password != confirmPassword)
        {
-        return res.status(500).json({ error : 'password mismatch'})
+        return res.status(500).json({ errorMessage : 'password mismatch'})
     }
     const existingUser = await User.findOne({userName})
     if(existingUser)
     {
-        return res.status(500).json({ error : 'user Already Exists'})
+        return res.status(500).json({ errorMessage : 'user Already Exists'})
     }
 
     const salt = await bcrypt.genSalt();
@@ -42,18 +42,18 @@ router.post("/login",async(req,res)=>{
     try {
        const {userName, userPassword } =req.body;
        if(!userName || !userPassword ){
-           return res.status(500).json({ error : 'all fields are required'})
+           return res.status(500).json({ errorMessage : 'all fields are required'})
        }      
     const existingUser = await User.findOne({userName})
     if(!existingUser){
-        return res.status(500).json({ error : 'user does not Exists'})
+        return res.status(500).json({ errorMessage : 'user does not Exists'})
     }
 
     const correctPassword = await bcrypt.compare(userPassword,existingUser.userPassword)
 
     if (!correctPassword)
     return res.status(401).json({
-      errorMessage: "Wrong email or password.",
+        errorMessage: "Wrong email or password.",
     });
    
     const token = jwt.sign({
