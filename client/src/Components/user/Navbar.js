@@ -1,6 +1,6 @@
 import Axios from "axios";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import UserContext from "../auth/UserContext";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Navbar() {
   const { user, getUser } = useContext(UserContext);
+  const history = useHistory();
 
   async function logOut() {
     await Axios.get(`http://localhost:3001/user/logOut`);
@@ -31,17 +32,13 @@ function Navbar() {
        <AppBar position="static">
        <Toolbar>
          <Typography className={classes.title}>
-           <Link to="/"> Book Store</Link>
+         <Button color="inherit" onClick={()=>{history.push("/") }}> Book Store </Button>
            </Typography>
           
       {user === null ? (
-        <>
- 
-         <Link color="inherit" to="/login">Log in</Link>
-         
-          <Link to="/register">Register</Link>
-         
-          
+        <>     
+         <Button color="inherit" onClick={()=>{ history.push("/login")}  }> Login </Button>
+         <Button color="inherit" onClick={()=>{history.push("/register") }}> Register </Button>    
         </>
       ) : (
         user && (

@@ -1,14 +1,51 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-// import "./SnippetEditor.scss";
-// import ErrorMessage from "../misc/ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 // import domain from "../../util/domain";
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
+import { FormGroup } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: 'column',
+    alignItems: "center",
+    justify: "center"
+  },
+  group:{
+    display: "flex",
+    flexDirection: 'row',
+    alignItems: "center",
+    justify: "center"
+  },
+  item: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(2),
+    width: '25ch',
+  },
+  title: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(2),
+    width: '20ch',
+  },
+  error:{
+    justify:"left",
+    color:"#ff0000",
+  }
+}));
+
 
 export default function BookEditor({ getBooks, setBookEditorOpen, editBookData }) {
   const [editorTitle, setEditorTitle] = useState("");
   const [editorDescription, setEditorDescription] = useState("");
   const [editorAuthor, setEditorAuthor] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const classes = useStyles();
 
   useEffect(() => {
     if (editBookData) {
@@ -37,11 +74,9 @@ export default function BookEditor({ getBooks, setBookEditorOpen, editBookData }
           bookData
         );
     } catch (err) {
-      if (err.response) {
-        if (err.response.data.errorMessage) {
-          setErrorMessage(err.response.data.errorMessage);
-        }
-      }
+      if (err) {
+        setErrorMessage(err.response.data.error);
+    }
       return;
     }
 
@@ -57,47 +92,53 @@ export default function BookEditor({ getBooks, setBookEditorOpen, editBookData }
   }
 
   return (
-    <div className="snippet-editor">
-      {errorMessage
-    //    && (
-    //     <ErrorMessage
-    //       message={errorMessage}
-    //       clear={() => setErrorMessage(null)}
-    //     />
-    //   )
-      }
-      <form className="form" onSubmit={saveBook}>
-        <label htmlFor="editor-title">Title</label>
-        <input
-          id="editor-title"
+    <Grid className={classes.root}>
+  {errorMessage && (
+     <div className={classes.error}>
+        <ErrorMessage
+          message={errorMessage}
+          clear={() => setErrorMessage(null)}
+        />
+        </div>
+      )}
+      <form className={classes.root} onSubmit={saveBook}>
+      <FormGroup className={classes.group} >
+        <FormLabel className={classes.title}>Title</FormLabel>
+       
+        <TextField
+          className={classes.item}
           type="text"
           value={editorTitle}
           onChange={(e) => setEditorTitle(e.target.value)}
         />
 
-        <label htmlFor="editor-description">Description</label>
-        <input
-          id="editor-description"
-          type="text"
-          value={editorDescription}
-          onChange={(e) => setEditorDescription(e.target.value)}
-        />
-
-        <label htmlFor="editor-code">Code</label>
-        <textarea
-          id="editor-code"
+        </FormGroup>
+        <FormGroup className={classes.group}>
+        <FormLabel className={classes.title} >Author</FormLabel>
+        <TextField className={classes.item}
           value={editorAuthor}
           onChange={(e) => setEditorAuthor(e.target.value)}
         />
-
-        <button className="btn-save" type="submit">
+        </FormGroup>
+        <FormGroup className={classes.group}>
+        <FormLabel className={classes.title}>Description</FormLabel>
+        <TextField
+         className={classes.item}
+          type="text"
+          value={editorDescription}
+          onChange={(e) => setEditorDescription(e.target.value)} multiline rows={4}
+        />
+        </FormGroup>
+        <FormGroup className={classes.group}>
+        <Button className={classes.item} variant="contained" color="primary" type="submit">
           Save
-        </button>
-        <button className="btn-cancel" type="button" onClick={closeEditor}>
+        </Button>
+        <Button className={classes.item} variant="contained" color="primary" type="button" onClick={closeEditor}>
           Cancel
-        </button>
+        </Button>
+        </FormGroup>
       </form>
-    </div>
+    </Grid>
   );
 }
 

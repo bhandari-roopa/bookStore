@@ -34,7 +34,7 @@ router.put("/:id", auth, async (req, res) => {
       const { title, description, author } = req.body;
       const bookId = req.params.id;
   
-      // validation
+    
   
       if (!description && !author) {
         return res.status(400).json({

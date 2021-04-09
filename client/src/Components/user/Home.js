@@ -5,6 +5,23 @@ import BookEditor from "./BookEditor";
 import UserContext from "../auth/UserContext";
 import { Link } from "react-router-dom";
 // import domain from "../../util/domain";
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: 'column',
+    alignItems: "center",
+    justify: "center"
+  },
+  button:{
+    marginTop:"20px",
+    marginBottom:"20px",
+  }
+}));
 
 export default function Home() {
   const [books, setBooks] = useState([]);
@@ -12,6 +29,7 @@ export default function Home() {
   const [editBookData, setEditBookData] = useState(null);
 
   const { user } = useContext(UserContext);
+  const classes = useStyles();
 
   useEffect(() => {
     if (!user) setBooks([]);
@@ -49,12 +67,9 @@ export default function Home() {
   return (
     <div className="home">
       {!bookEditorOpen && user && (
-        <button
-          className="btn-editor-toggle"
+        <Button color="primary" variant="contained" className={classes.button} 
           onClick={() => setBookEditorOpen(true)}
-        >
-          Add Book
-        </button>
+        > Add Book</Button>
       )}
       {bookEditorOpen && (
         <BookEditor
@@ -69,10 +84,10 @@ export default function Home() {
             <p className="no-snippets-msg">No books have been added yet.</p>
           )}
       {user === null && (
-        <div className="no-user-message">
-          <h2>Welcome to Book Store</h2>
+      <Grid className={classes.root}>
+      <h2>Welcome to Book Store</h2>
           <Link to="/register">Register here</Link>
-        </div>
+      </Grid>
       )}
     </div>
   );
